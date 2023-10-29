@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="titleText">portfolio</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+    
+<!-- navbar section starts  -->
+
+<nav class="navbar">
+    <a href="index.html" id="homeLink"> <i class="fas fa-home"></i> <span id="homeText">home</span> </a>
+    <a href="about.html" id="aboutLink"> <i class="fas fa-user"></i> <span id="aboutText">about</span> </a>
+    <a href="portfolio.html" id="portfolioLink"> <i class="fas fa-briefcase"></i> <span id="portfolioText">portfolio</span> </a>
+    <a href="blogs.html" id="skillsLink"> <i class="fas fa-blog"></i> <span id="skillsText">skills</span> </a>
+    <a href="contact.html" id="contactLink"> <i class="fas fa-address-book"></i> <span id="contactText">contact</span> </a>
+    <button onclick="toggleLanguage()">تغيير اللغة</button>
+</nav>
+
+<!-- navbar section ends -->
+
+<!-- portfolio section starts  -->
+
+<section class="portfolio">
+
+    <h1 class="heading" id="headingText"> <span id="myText">my</span> work </h1>
+
+    <div class="box-container" id="boxContainer">
+
+        <!-- Projects will be dynamically added here -->
+        <div class="box">
+            <img src="images/img-1.jpg" alt="">
+            <div class="content">
+                <h3>project 01</h3>
+                <p>Chat GPT - Open AI - HTML5 Template -sounds animal by "Polar Games" Devloper "wafi alyousfi".</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+
+        <div class="box">
+            <img src="images/img-2.png" alt="">
+            <div class="content">
+                <h3>project 02</h3>
+                <p>Our super-fast E-commerce template was made to help anyone start their very own online store at ease. Built with React,.</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+       
+        <div class="box">
+            <img src="images/img-3.png" alt="">
+            <div class="content">
+                <h3>project 03</h3>
+                <p>The goal of InfyCare is to Manage your hospital appointment booking digitally.</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+
+        <div class="box">
+            <img src="images/img-4.png" alt="">
+            <div class="content">
+                <h3>project 04</h3>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio, praesentium.</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+
+        <div class="box">
+            <img src="images/img-5.png" alt="">
+            <div class="content">
+                <h3>project 05</h3>
+                <p>provides features of e-School. If you have any questions, feel free to reach out. Thank you for choosing e-School!</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+
+        <div class="box">
+            <img src="images/img-6.png" alt="">
+            <div class="content">
+                <h3>project 06</h3>
+                <p>All-in-one Online CourseSelling and eBook selling Platform</p>
+                <a href="#">read more</a>
+            </div>
+        </div>
+
+
+    </div>
+
+    <a href="#" class="btn" id="loadMoreBtn"> load more <i class="fas fa-redo"></i> </a>
+    
+</section>
+
+<!-- portfolio section ends -->
+
+<script>
+    var languageData = {}; // سنخزن البيانات المحملة هنا
+
+    // دالة لتحميل ملف اللغة
+    function loadLanguage(lang) {
+        fetch(`lang.json`)
+            .then(response => response.json())
+            .then(data => {
+                languageData[lang] = data;
+                updateTexts();
+            })
+            .catch(error => console.error('Error loading language file:', error));
+    }
+
+    // تغيير اللغة
+    function toggleLanguage() {
+        var currentLang = document.documentElement.lang;
+        if (currentLang === "en") {
+            document.documentElement.lang = "ar";
+            if (!languageData["ar"]) {
+                loadLanguage("arabic");
+            } else {
+                updateTexts();
+            }
+        } else {
+            document.documentElement.lang = "en";
+            updateTexts();
+        }
+    }
+
+    // تحديث النصوص بناءً على اللغة المختارة
+    function updateTexts() {
+        var currentLang = document.documentElement.lang;
+        var data = languageData[currentLang];
+        if (data) {
+            document.getElementById('titleText').textContent = data.title;
+            document.getElementById('headingText').textContent = data.heading;
+            document.getElementById('myText').textContent = data.my;
+            document.getElementById('loadMoreBtn').textContent = data.loadMore;
+
+            var boxes = document.getElementById('boxContainer');
+            boxes.innerHTML = ''; // لحذف المحتوى القديم
+
+            for (var i = 1; i <= 6; i++) {
+                var box = document.createElement('div');
+                box.className = 'box';
+
+                var image = document.createElement('img');
+                image.src = `images/img-${i}.jpg`;
+                image.alt = `project ${i}`;
+                box.appendChild(image);
+
+                var contentDiv = document.createElement('div');
+                contentDiv.className = 'content';
+
+                var h3 = document.createElement('h3');
+                h3.textContent = data[`projectTitle${i}`];
+                contentDiv.appendChild(h3);
+
+                var p = document.createElement('p');
+                p.textContent = data[`projectDesc${i}`];
+                contentDiv.appendChild(p);
+
+                var link = document.createElement('a');
+                link.href = '#';
+                link.textContent = data.readMore;
+                contentDiv.appendChild(link);
+
+                box.appendChild(contentDiv);
+                boxes.appendChild(box);
+            }
+        }
+    }
+
+    // Call loadLanguage() initially to set the texts according to the default language
+    loadLanguage("english");
+</script>
+</body>
+</html>
